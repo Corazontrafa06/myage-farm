@@ -220,6 +220,19 @@ async def process_account(init_data, account, config, init_only=False):
     if isinstance(user, dict) and user.get("id"):
         print(f"[{name}] akun: {user.get('id')} {user.get('username') or ''}".strip())
 
+    # Daily check-in: reset tiap 00:00 UTC (07:00 WIB).
+    daily = data.get("daily") or {}
+    if daily.get("ready"):
+        dres = await api.post("daily")
+        print(
+            f"[{name}] daily -> {dres['status']} "
+            f"{json.dumps(dres['data'], ensure_ascii=False)[:160]}"
+        )
+    else:
+        reset_ms = daily.get("resetInMs")
+        if reset_ms:
+            print(f"[{name}] daily belum siap, reset dalam {int(reset_ms / 60000)} menit")
+
     tasks_res = await api.get("tasks")
     if not tasks_res["ok"]:
         print(f"[{name}] tasks gagal: {tasks_res['data']}")
