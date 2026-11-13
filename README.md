@@ -8,6 +8,12 @@ Kalau mau ikut dan pakai script ini, masuk lewat link referral pembuatnya:
 
 https://t.me/MyAgeApp?startapp=r1364293980
 
+Penting: buka link itu **sekali dari akun Telegram yang mau didaftarkan**, sebelum
+menjalankan script. Telegram tidak meneruskan `start_param` lewat `requestWebView`
+(sudah diuji: `start_param` tidak muncul di initData), jadi referral tidak bisa
+disuntikkan otomatis oleh script. Klik link dulu, baru `myage.py` dijalankan untuk
+akun itu.
+
 ## Reset & jadwal
 
 - Misi (`/api/tasks`) tidak reset harian: `repeatHours = 0`, `reopensInMs = null`.
