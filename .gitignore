@@ -1,0 +1,8 @@
+config.json
+sessions/
+.tmp/
+__pycache__/
+*.session
+*.session-journal
+.gather_token
+.github_token
