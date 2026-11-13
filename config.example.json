@@ -1,0 +1,13 @@
+{
+  "bot": "MyAgeApp",
+  "app_url": "https://myageapp.xyz",
+  "tg_api_id": 0,
+  "tg_api_hash": "ISI_DARI_my.telegram.org",
+  "channels": [],
+  "accounts": [
+    {
+      "name": "main",
+      "phone": "+62xxxxxxxxxx"
+    }
+  ]
+}
