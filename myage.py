@@ -274,6 +274,8 @@ async def process_account(init_data, account, config, init_only=False):
         if res["ok"]:
             claimed += 1
             print(f"[{name}] claim ok: {label}")
+        elif "Link your X" in str(res["data"]):
+            print(f"[{name}] skip (butuh link X): {label}")
         else:
             print(f"[{name}] claim gagal: {label} -> {res['status']} {str(res['data'])[:120]}")
 
