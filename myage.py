@@ -229,6 +229,20 @@ async def process_account(init_data, account, config, init_only=False):
     if isinstance(user, dict) and user.get("id"):
         print(f"[{name}] akun: {user.get('id')} {user.get('username') or ''}".strip())
 
+    # "Telegram check" (onboarding): POST /api/welcome. Tanpa ini semua claim
+    # ditolak 400 "Take the Telegram check first."
+    welcome = data.get("welcome") or {}
+    if welcome and not welcome.get("claimed"):
+        wres = await api.post("welcome")
+        print(
+            f"[{name}] telegram check -> {wres['status']} "
+            f"{json.dumps(wres['data'], ensure_ascii=False)[:160]}"
+        )
+        if wres["ok"]:
+            session_res = await api.post("session")
+            if session_res["ok"]:
+                data = session_res["data"]
+
     # Daily check-in: reset tiap 00:00 UTC (07:00 WIB).
     daily = data.get("daily") or {}
     if daily.get("ready"):
@@ -316,6 +330,15 @@ async def run_account(account, config, init_only=False, init_data=None):
             except Exception as exc:  # noqa: BLE001
                 print(f"[{name}] skip {channel}: {type(exc).__name__}: {str(exc)[:120]}")
             await asyncio.sleep(random.uniform(1.5, 3))
+
+        # "Telegram check": bot harus menerima /start dari akun ini, kalau belum
+        # semua claim ditolak 400 "Take the Telegram check first."
+        try:
+            await client.send_message(config.get("bot", "MyAgeApp"), "/start")
+            print(f"[{name}] kirim /start ke bot")
+            await asyncio.sleep(random.uniform(3, 5))
+        except Exception as exc:  # noqa: BLE001
+            print(f"[{name}] /start gagal: {type(exc).__name__}: {str(exc)[:100]}")
 
         data = await open_webview(
             client,
