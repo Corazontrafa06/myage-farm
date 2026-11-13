@@ -109,8 +109,12 @@ def pick_init_data(url):
     return urllib.parse.unquote(raw)
 
 
-async def open_webview(client, bot_username, app_url):
-    """Coba beberapa varian RequestWebView, ambil yang berhasil."""
+async def open_webview(client, bot_username, app_url, start_param=None):
+    """Coba beberapa varian RequestWebView, ambil yang berhasil.
+
+    start_param dipakai untuk atribusi referral (mis. "r1364293980").
+    Hanya berpengaruh kalau akun belum pernah membuka Mini App ini.
+    """
     bot = await client.get_input_entity(bot_username)
     me = await client.get_input_entity("me")
 
@@ -124,6 +128,8 @@ async def open_webview(client, bot_username, app_url):
     last_error = None
     for extra in attempts:
         kwargs = {"bot": bot, "platform": "android", "url": app_url, **extra}
+        if start_param:
+            kwargs["start_param"] = start_param
         try:
             result = await client(RequestWebViewRequest(**kwargs))
         except Exception as exc:  # noqa: BLE001 - semua varian boleh gagal
@@ -201,6 +207,9 @@ async def process_account(init_data, account, config, init_only=False):
     """Bagian setelah initData didapat: session -> tasks -> claim."""
     name = account.get("name") or "main"
     print(f"[{name}] initData didapat ({len(init_data)} char)")
+    if "start_param" in init_data:
+        sp = urllib.parse.parse_qs(init_data).get("start_param", [""])[0]
+        print(f"[{name}] start_param: {sp}")
 
     if init_only:
         snippet = init_data[:60] + "..." if len(init_data) > 60 else init_data
@@ -307,7 +316,10 @@ async def run_account(account, config, init_only=False, init_data=None):
             await asyncio.sleep(random.uniform(1.5, 3))
 
         data = await open_webview(
-            client, config.get("bot", "MyAgeApp"), config.get("app_url", BASE)
+            client,
+            config.get("bot", "MyAgeApp"),
+            config.get("app_url", BASE),
+            start_param=config.get("ref") or None,
         )
         return await process_account(data, account, config, init_only)
     finally:
