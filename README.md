@@ -33,6 +33,11 @@ Hasil probe (13 Nov 2026):
 - Tidak ada `/api/auth/login`. Yang ada `POST /api/session`.
 - Klaim misi: `POST /api/tasks` body `{"taskId": id}`.
 - Tanpa initData valid: `401 {"error":"Open My Age from Telegram."}`
+- Telegram check (onboarding) = `POST /api/welcome`. Belum diambil → semua claim
+  ditolak `400 "Take the Telegram check first."` Script sekarang otomatis ambil
+  kalau `welcome.claimed` masih false.
+- Daily check-in = `POST /api/daily`; reset 00:00 UTC (07:00 WIB), lihat `daily.resetInMs`.
+- Task yang butuh akun X di-link balas `409 "Link your X first"`; script melewatinya.
 
 ## Pasang
 
