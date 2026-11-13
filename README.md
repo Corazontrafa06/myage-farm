@@ -2,6 +2,21 @@
 
 Ambil `initData` sendiri lewat Telegram, lalu klaim misi di `https://myageapp.xyz`.
 
+## Referral
+
+Kalau mau ikut dan pakai script ini, masuk lewat link referral pembuatnya:
+
+https://t.me/MyAgeApp?startapp=r1364293980
+
+## Reset & jadwal
+
+- Misi (`/api/tasks`) tidak reset harian: `repeatHours = 0`, `reopensInMs = null`.
+  Task channel selesai sekali; task custom multi-tap sampai `pressesRequired` penuh.
+- Daily check-in reset tiap **00:00 UTC = 07:00 WIB** (`daily.resetInMs`).
+  Streak: 100, 200, 300, 400, 500, 600, 1000 poin.
+- Bonus harian lain (tag di nama 300, bio 1000) reset di jam yang sama.
+- Refill spin ~67 menit, league ~6 hari.
+
 ## Kenapa bukan script lama
 
 Hasil probe (13 Nov 2026):
